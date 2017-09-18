@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Blob.cs" />
+     <Compile Include="Assets\CreateMesh.cs" />
      <Compile Include="Assets\DisplayTexture.cs" />
      <Compile Include="Assets\ImageProcessing.cs" />
  <Reference Include="UnityEngine.Analytics">

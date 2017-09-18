@@ -15,35 +15,20 @@ public class ImageProcessing : MonoBehaviour {
 	}
 
 
-   	/**
-   	 * Fuction Name: purge
-   	 * 
-   	 * Function: Will purge the background
-   	 * Input: WebCamTexture 
-   	 * Output: Color Array
-	**/
+    //Will purge the background
     public static Color[] purge(WebCamTexture tex) {
-		//create the array of pixel colors
         Color[] colArray = tex.GetPixels();
         int i = 0;
-		//iterate through array turn into grayscale
         while (i < colArray.Length) {
             Color col = colArray[i];
-			//grayscale formula r*.21 + g*.72 + b*.07
-			//change 0 to 1 value to 0 to 255
             float y = ((col.r * 255) * 0.21f) + ((col.g * 255) * 0.72f) + ((col.b * 255) * 0.07f);
-            //change values for writing to black
-			if (y < 128) {
+            if (y < 128) {
                 colArray[i] = Color.black;
-			} if (col.r >= 128){
-				colArray[i] = Color.red;
-			}else {
-				//change all other colors to white
+            } else {
                 colArray[i] = Color.white;
             }
             i += 1;
         }
-		//returns the grayscaled color array
         return colArray;
     }
 }

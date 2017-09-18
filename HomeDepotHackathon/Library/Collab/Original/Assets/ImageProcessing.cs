@@ -35,7 +35,7 @@ public class ImageProcessing : MonoBehaviour {
             //change values for writing to black
 			if (y < 128) {
                 colArray[i] = Color.black;
-			} if (col.r >= 128){
+			} if ( r >= 128){
 				colArray[i] = Color.red;
 			}else {
 				//change all other colors to white
