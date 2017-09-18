@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Contains the functionality for the blob
-public class Blob : MonoBehaviour {
+//Contains the functionality for Blob (Feature) Detection
+public class Blob  {
     public Vector2 A;
     public Vector2 B;
     public Vector2 C;
@@ -43,60 +43,69 @@ public class Blob : MonoBehaviour {
 
     }
 
-    //Determines the distance from the nearest blob using pythagorean 
-   public void incorporatePoint(Vector2 point, float threshold = 25) {
+   //Determines the distance from the nearest blob using pythagorean 
+   public bool incorporatePoint(Vector2 point, float threshold = 10) {
         int countX = 0;
         int countY = 0;
 
-        if (isInBox(Mathf.RoundToInt(point.x), Mathf.RoundToInt(point.y))) {
-            print("IS INSIDE BOX");
-            return;
-        }
         //Determines if the point is near the pixel
-        if (point.x <= A.x) {
-            countX = Mathf.RoundToInt(A.x - point.x);
-        } else if (point.x >= B.x) {
-            countX = Mathf.RoundToInt(point.x - B.x);
+        if (point.x < A.x) {
+            countX = Mathf.Abs(Mathf.RoundToInt(A.x - point.x));
+        } else if (point.x > B.x) {
+            countX = Mathf.Abs(Mathf.RoundToInt(point.x - B.x));
         }
 
-        if (point.y >= A.y) {
-            countY = Mathf.RoundToInt(point.y - A.y);
-        } else if (point.y <= C.y) {
-            countY = Mathf.RoundToInt(C.y - point.y);
+        if (point.y > A.y) {
+            countY = Mathf.Abs(Mathf.RoundToInt(point.y - A.y));
+        } else if (point.y < C.y) {
+            countY = Mathf.Abs(Mathf.RoundToInt(C.y - point.y));
         }
 
-        float distance = Mathf.Sqrt(Mathf.Pow(countX, 2) + Mathf.Pow(countY, 2));
-        print(distance);
+        float distance = Mathf.Abs(Mathf.Sqrt(Mathf.Pow(countX, 2) + Mathf.Pow(countY, 2)));
 
         //If the pixel is within a certain threshold of the box, change the box to incorporate
-        if (distance < threshold) {
+        if (Mathf.Abs(distance) < threshold) {
             pixelCount += 1;
             fitToBoundingBox(point);
+            return true;
+        } else {
+            return false;
         }
+    }
+
+    public float getArea() {
+        float ab = Vector2.Distance(A, B);
+        float ac = Vector2.Distance(A, C);
+
+        return Mathf.Pow((ab * ac), 2); 
     }
     
     //Stretches the bounding box to incorporate the new element
     public void fitToBoundingBox(Vector2 point) {
-        if (point.x < A.x) {
+        if (point.x <= A.x) {
             A = new Vector2(point.x, A.y);
             C = new Vector2(point.x, C.y);
         }
 
-        if (point.x > B.x) {
+        if (point.x >= B.x) {
             B = new Vector2(point.x, B.y);
             D = new Vector2(point.x, D.y);
         }
 
 
-        if (point.y > A.y) {
-            A = new Vector2(A.x, point.y);
-            B = new Vector2(B.x, point.y);
+        if (point.y >= A.y) {
+            A.y = point.y;
+            B.y = point.y;
         }
 
-        if (point.y < C.y) {
-            C = new Vector2(C.x, point.y);
-            D = new Vector2(D.x, point.y);
+        if (point.y <= C.y) {
+            C.y = point.y;
+            D.y = point.y;
         }
+    }
+    
+    public Vector2 getCenter() {
+        return new Vector2((B.x - A.x) / 2, (A.y - C.y) / 2);
     }
 
     public override string ToString() {
